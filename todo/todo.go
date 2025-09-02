@@ -21,9 +21,8 @@ var filePath string = "my-to-do-list.json"
 
 type ToDoList []Todo
 
-func (t ToDoList) Save() error {
-	err := WriteToFile("my-to-do-list.json", t)
-
+func (t *ToDoList) Save() error {
+	err := WriteToFile("my-to-do-list.json", *t)
 	if err != nil{ 
 		fmt.Println("Error while writing to file")
 		return err
@@ -53,13 +52,15 @@ func New(toDoArray ToDoList ,toDoID string, toDoTitle string, toDoContent string
 	return newToDo, nil
 }
 
-func (t Todo) MarkAsDone() {
+func MarkAsDone(toDoArray *ToDoList ,t *Todo) {
+	defer toDoArray.Save()
 	if (!t.Done) {
 		t.Done = true
-		fmt.Println("The task was marked as done!")
+		fmt.Println("The task was marked as done!", t, toDoArray)
+		fmt.Println(&toDoArray)
+
 		return
 	}
-
 	fmt.Println("Task already marked as done.")
 }
 
@@ -74,7 +75,7 @@ func AddToDo(toDoArray ToDoList ,todo *Todo) error {
 }
 
 func DeleteToDoById(toDoArray ToDoList ,todoId string) error {
-	todo, err := GetToDoById(toDoArray, todoId)
+	todo, err := GetToDoById(&toDoArray, todoId)
 
 	if err != nil {
 		return err
@@ -92,8 +93,8 @@ func DeleteToDoById(toDoArray ToDoList ,todoId string) error {
 	return nil
 }
 
-func GetToDoById(toDoArray ToDoList ,todoId string) (*Todo, error) {
-	for _, todo := range toDoArray {
+func GetToDoById(toDoArray *ToDoList ,todoId string) (*Todo, error) {
+	for _, todo := range *toDoArray {
 		if (todo.Id == todoId) {
 			return &todo, nil
 		}

@@ -7,7 +7,7 @@ import (
 )
 
 func WriteToFile(filePath string, data any) error {
-	dataJSON, err := json.Marshal(data)
+	dataJSON, err := json.MarshalIndent(data, "", "    ")
 
 	if err != nil {
 		return err

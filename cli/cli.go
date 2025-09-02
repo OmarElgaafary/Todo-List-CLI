@@ -31,7 +31,7 @@ func ReadCLI(list *todo.ToDoList) {
 			fmt.Println(list)
 			return
 		}
-		toDoById, err := todo.GetToDoById(*list ,param)
+		toDoById, err := todo.GetToDoById(list ,param)
 
 		if err != nil {
 			panic("Error fetching todo.")
@@ -65,7 +65,25 @@ func ReadCLI(list *todo.ToDoList) {
 		if err != nil {
 			panic("Error deleteing todo.")
 		}
+	case "mark":
 
+		if len(args) != 3 {
+            fmt.Println("Usage: todo mark <id> <check / uncheck>")
+            os.Exit(1)
+        }
+
+		param := args[1]
+		toDoById, err := todo.GetToDoById(list ,param)
+		
+		if err != nil {
+			fmt.Println("Error retrieving todo.")
+            os.Exit(1)
+		}
+		checkStatus := args[2]
+		if checkStatus == "check" {
+			toDoById.Done = true
+			list.Save()
+		}
     default:
         fmt.Println("Unknown command:", command)
         fmt.Println("Available commands: get")
