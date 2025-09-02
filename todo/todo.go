@@ -57,12 +57,21 @@ func MarkAsDone(toDoArray *ToDoList ,t *Todo) {
 	if (!t.Done) {
 		t.Done = true
 		fmt.Println("The task was marked as done!", t, toDoArray)
-		fmt.Println(&toDoArray)
-
 		return
 	}
 	fmt.Println("Task already marked as done.")
 }
+
+func UnMarkAsDone(toDoArray *ToDoList ,t *Todo) {
+	defer toDoArray.Save()
+	if (t.Done) {
+		t.Done = false
+		fmt.Println("The task was unmarked.", t, toDoArray)
+		return
+	}
+	fmt.Println("Task already unmarked.")
+}
+
 
 func AddToDo(toDoArray ToDoList ,todo *Todo) error {
 	if (!slices.Contains(toDoArray, *todo)) {
@@ -94,9 +103,9 @@ func DeleteToDoById(toDoArray ToDoList ,todoId string) error {
 }
 
 func GetToDoById(toDoArray *ToDoList ,todoId string) (*Todo, error) {
-	for _, todo := range *toDoArray {
-		if (todo.Id == todoId) {
-			return &todo, nil
+	for i := range *toDoArray {
+		if ((*toDoArray)[i].Id == todoId) {
+			return &(*toDoArray)[i], nil
 		}
 	}
 
