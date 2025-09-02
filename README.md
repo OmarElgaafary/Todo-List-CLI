@@ -1,4 +1,5 @@
-Use 
+Use
+
 go run . < command > [ arguments ]
 
 GET all:
