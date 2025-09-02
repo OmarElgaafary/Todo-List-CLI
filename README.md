@@ -1,4 +1,4 @@
-Use go run . <command> [arguments]
+Use go run . < command > [ arguments ]
 
 GET all:
 go run . get all
