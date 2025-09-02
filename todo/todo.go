@@ -22,7 +22,7 @@ var filePath string = "my-to-do-list.json"
 type ToDoList []Todo
 
 func (t *ToDoList) Save() error {
-	err := WriteToFile("my-to-do-list.json", *t)
+	err := WriteToFile(filePath, *t)
 	if err != nil{ 
 		fmt.Println("Error while writing to file")
 		return err
@@ -56,7 +56,7 @@ func MarkAsDone(toDoArray *ToDoList ,t *Todo) {
 	defer toDoArray.Save()
 	if (!t.Done) {
 		t.Done = true
-		fmt.Println("The task was marked as done!", t, toDoArray)
+		fmt.Println("The task was marked as done!")
 		return
 	}
 	fmt.Println("Task already marked as done.")
@@ -66,7 +66,7 @@ func UnMarkAsDone(toDoArray *ToDoList ,t *Todo) {
 	defer toDoArray.Save()
 	if (t.Done) {
 		t.Done = false
-		fmt.Println("The task was unmarked.", t, toDoArray)
+		fmt.Println("The task was unmarked.")
 		return
 	}
 	fmt.Println("Task already unmarked.")
@@ -97,7 +97,7 @@ func DeleteToDoById(toDoArray ToDoList ,todoId string) error {
 	toDoIndex := slices.Index(toDoArray, *todo)
 	toDoArray = slices.Delete(toDoArray, toDoIndex, toDoIndex + 1)
 	
-	fmt.Printf("My todo list deleted successfully.\n%v", toDoArray)
+	fmt.Println("Todo list deleted successfully.")
 	toDoArray.Save()
 	return nil
 }

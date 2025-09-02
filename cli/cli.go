@@ -10,14 +10,15 @@ import (
 
 func ReadCLI(list *todo.ToDoList) {
 	args := os.Args[1:]
+	command := args[0]
 
-    if len(args) < 1 {
+
+    if len(args) == 1 && command != "create" {
         fmt.Println("Usage: todo <command> [arguments]")
         os.Exit(1)
     }
 
-    command := args[0]
-	fmt.Println(args)
+	defer fmt.Printf("Command: %v\n", command)
 	switch command {
 	case "get":
 		
@@ -28,7 +29,7 @@ func ReadCLI(list *todo.ToDoList) {
 
 		param := args[1]
 		if param == "all" {
-			fmt.Println(list)
+			fmt.Println(*list)
 			return
 		}
 		toDoById, err := todo.GetToDoById(list ,param)
@@ -36,16 +37,14 @@ func ReadCLI(list *todo.ToDoList) {
 		if err != nil {
 			panic("Error fetching todo.")
 		}
-		fmt.Println(toDoById)
+		fmt.Println(*toDoById)
 		return
 
 	case "create":
-		fmt.Println("Enter todo Id: ")
-		inputID := takeCLIArgs()
-		fmt.Println("Enter todo title: ")
-		inputTitle := takeCLIArgs()
-		fmt.Println("Enter todo content: ")
-		inputContent := takeCLIArgs()
+
+		inputID := takeCLIArgs("Enter todo Id: ")
+		inputTitle := takeCLIArgs("Enter todo title: ")
+		inputContent := takeCLIArgs("Enter todo content: ")
 
 		_ , err := todo.New(*list, inputID, inputTitle, inputContent)
 
@@ -88,10 +87,8 @@ func ReadCLI(list *todo.ToDoList) {
 		}
 		if checkStatus == "check" {
 			todo.MarkAsDone(list, toDoById)
-			return
 		} else if checkStatus == "uncheck" {
 			todo.UnMarkAsDone(list, toDoById)
-			return
 		}
 
     default:
@@ -99,12 +96,11 @@ func ReadCLI(list *todo.ToDoList) {
         fmt.Println("Available commands: get")
         os.Exit(1)
 	}
-
-
 }
 
-func takeCLIArgs() string {
+func takeCLIArgs(msg string) string {
 	var userInput string
+	fmt.Printf("%v\n", msg)
 
 	reader := bufio.NewReader(os.Stdin)
 	userInput, err := reader.ReadString('\n')
